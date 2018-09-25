@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { loadModules } from 'react-arcgis';
 
-export default class BermudaTriangle extends React.Component {
+export default class SceneLayer extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -56,8 +56,8 @@ export default class BermudaTriangle extends React.Component {
               portalItem: {
                 id: "b06941ebb6b0460c9cfa31b35885c787"
               },
-              popupEnabled: true
-            });
+              popupEnabled: true,
+              });
 
             this.setState({ sceneLayer });
             sceneLayer.renderer = {
