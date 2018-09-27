@@ -1,6 +1,8 @@
 import * as React from 'react';
 import { Scene } from 'react-arcgis';
 import BuildingScene from './BuildingScene';
+import BuildingUnderConstruction from './BuildingUnderConstruction';
+import BuildingPermitted from './BuildingPermitted';
 import SearchWidget from './SearchWidget';
 import BostonBasemap from './BostonBasemap';
 import GraphicsLayer from './GraphicsLayer';
@@ -67,6 +69,8 @@ export default class Map extends React.Component {
               onClick = {this.handleOnClick.bind(this)}
           >
           <BuildingScene parcel={this.state.parcel}/>
+          <BuildingUnderConstruction parcel={this.state.parcel}/>
+          <BuildingPermitted parcel={this.state.parcel}/>
           <SearchWidget/>
           <BostonBasemap/>
           <GraphicsLayer parcel={this.state.parcel}/>
