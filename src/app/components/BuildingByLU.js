@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { loadModules } from 'react-arcgis';
 
-export default class BuildingScene extends React.Component {
+export default class BuildingByLU extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -75,7 +75,7 @@ export default class BuildingScene extends React.Component {
             {
             type: "fields",
             fieldInfos: [{
-              fieldName: "Parcel_Use",
+              fieldName: "LandUse",
               label: "Use",
               visible: true
             }, {
@@ -104,16 +104,10 @@ export default class BuildingScene extends React.Component {
 
         loadModules(['esri/layers/SceneLayer']).then(([ SceneLayer ]) => {
 
-          const symbol = {
+          const symbol =  {
             type: "mesh-3d", // autocasts as new MeshSymbol3D()
             symbolLayers: [{
               type: "fill", // autocasts as new FillSymbol3DLayer()
-              // If the value of material is not assigned, the default color will be grey
-              material: {
-                color:"#ffffff",
-                colorMixMode: "replace"
-
-              },
               edges: {
                 type: 'solid',
                 color: [0, 0, 0, 1],
@@ -124,17 +118,18 @@ export default class BuildingScene extends React.Component {
             // Add the geometry and symbol to a new graphic
             const sceneLayer = new SceneLayer({
               portalItem: {
-                id: "b06941ebb6b0460c9cfa31b35885c787"
+                id: "49f1121b57fd4381a42fe784638fc00b"
               },
               popupEnabled: true,
-              legendEnabled:true
+              legendEnabled:true,
+              visible:false
               });
 
             this.setState({ sceneLayer });
-            sceneLayer.renderer = {
-                type: "simple", // autocasts as new SimpleRenderer()
-                symbol: symbol
-              };
+            // sceneLayer.renderer = {
+            //     type: "simple", // autocasts as new SimpleRenderer()
+            //     symbol: symbol
+            //   };
             this.props.map.add(sceneLayer);
         })
     }

@@ -24,6 +24,10 @@
     "webpack-dev-server": "^3.1.8"
   },
   "dependencies": {
-    "react-arcgis": "^3.3.2"
+    "@material-ui/core": "^3.1.2",
+    "@material-ui/icons": "^3.0.1",
+    "react-arcgis": "^3.3.2",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0"
   }
 }

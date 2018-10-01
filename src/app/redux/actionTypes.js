@@ -1,0 +1,2 @@
+export const SHOW_HIDE_LEGEND = 'SHOW_HIDE_LEGEND';
+export const SHOW_HIDE_LAYERS = 'SHOW_HIDE_LAYERS';

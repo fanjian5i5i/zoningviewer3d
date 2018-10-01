@@ -15,7 +15,8 @@ export default class GraphicsLayer extends React.Component {
     componentDidUpdate(){
       var that = this;
       var geometry = {};
-      that.state.graphicsLayer.removeAll();
+      var pid = "";
+
       var fillSymbol = {
           type: "simple-fill", // autocasts as new SimpleFillSymbol()
           color: [227, 139, 79, 0.3],
@@ -25,7 +26,9 @@ export default class GraphicsLayer extends React.Component {
           }
         };
         if(that.props.parcel!=null){
+          that.state.graphicsLayer.removeAll();
           geometry = that.props.parcel.geometry;
+          pid = that.props.parcel.attributes.PID_LONG
         }
       loadModules(["esri/layers/GraphicsLayer","esri/Graphic"]).then(([ GraphicsLayer,Graphic ]) => {
 
@@ -34,14 +37,27 @@ export default class GraphicsLayer extends React.Component {
           symbol: fillSymbol
         });
 
-       that.state.graphicsLayer.graphics.add(polygonGraphic);
+        that.state.graphicsLayer.graphics.add(polygonGraphic);
+        console.log(that.props.view.popup.visible)
+        if(that.props.view.popup.visible == false){
+          that.props.view.popup.open({
+            location:geometry.centroid,
+            title:"1",
+            content:pid
+          })
+
+        }
+
+
         });
 
     }
     componentWillMount() {
         loadModules(["esri/layers/GraphicsLayer","esri/Graphic"]).then(([ GraphicsLayer,Graphic ]) => {
 
-          var graphicsLayer = new GraphicsLayer();
+          var graphicsLayer = new GraphicsLayer({
+            "title":"Parcel Selected"
+          });
 
             this.setState({ "graphicsLayer":graphicsLayer });
 

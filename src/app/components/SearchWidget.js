@@ -14,10 +14,21 @@ export default class SearchWidget extends React.Component {
     }
 
     componentWillMount() {
-        loadModules(["esri/widgets/Search", "esri/layers/FeatureLayer",]).then(([ Search,FeatureLayer ]) => {
+        loadModules(["esri/widgets/Search", "esri/layers/FeatureLayer","esri/tasks/Locator"]).then(([ Search,FeatureLayer,Locator ]) => {
 
 
           var sources = [
+            {
+  locator: new Locator({ url: "http://gis.cityofboston.gov/arcgis/rest/services/Locators/SAM_DualRange_Locator/GeocodeServer" }),
+  singleLineFieldName: "Single Line Input",
+  outFields: ["*"],
+  name: "BOSTON Geocoding Service",
+  localSearchOptions: {
+    minScale: 300000,
+    distance: 50000
+  },
+
+},
               {
                 featureLayer: new FeatureLayer({
                   url: "http://gis.cityofboston.gov/arcgis/rest/services/Parcels/Parcels17/MapServer/0",
@@ -36,13 +47,14 @@ export default class SearchWidget extends React.Component {
               }];
               var searchWidget = new Search({
                   view: this.props.view,
-                  sources:sources
+                  sources:sources,
+                  // includeDefaultSources:false
                 });
             this.setState({ searchWidget });
 
             this.props.view.ui.add(searchWidget, {
                 position: "top-right",
-                index: 2
+                index: 0
               });
           })
     }

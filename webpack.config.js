@@ -20,7 +20,7 @@ var config = {
     rules:[
       {
         test: /\.js?/,
-        include: SRC_DIR,
+        // include: SRC_DIR,
         loader: 'babel-loader',
         exclude: /node_modules/,
         query: {

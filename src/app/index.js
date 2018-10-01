@@ -1,12 +1,15 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { Scene } from 'react-arcgis';
 import Map from './components/Map';
-
-
+import AppBar from './components/AppBar';
+import reduxStore from './redux';
+import { Provider } from 'react-redux';
 ReactDOM.render(
-  <div>
+  <Provider store={reduxStore}>
+    <div>
+      <AppBar/>
       <Map/>
-  </div>,
+    </div>
+  </Provider>,
   document.getElementById('app')
 );
