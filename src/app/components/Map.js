@@ -144,7 +144,7 @@ class Map extends React.Component {
           <BuildingScene parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays}/>
           <SearchWidget/>
           <BostonBasemap/>
-          <GraphicsLayer parcel={this.state.parcel} mapPoint={this.state.mapPoint} />
+          <GraphicsLayer parcel={this.state.parcel} mapPoint={this.state.mapPoint} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays}/>
           <ZoningLayers/>
           {this.props.appBarState.showLegend ? <LegendWidget />:[]}
           {this.props.appBarState.showLayers ? <LayerControl/>:[]}
