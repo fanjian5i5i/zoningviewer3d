@@ -13,15 +13,23 @@ export default class BuildingScene extends React.Component {
         return null;
     }
     componentDidUpdate(){
+      
       var that = this;
+      console.log(that.props.parcel);
       var title = "";
       var address = "";
       var owner = "";
+      var zoningDistrict = "";
+      var zoningSubDistrict = "";
+      var overlays = "";
 
       if(that.props.parcel!=null){
         title = that.props.parcel.attributes.PID_LONG;
         address = that.props.parcel.attributes.FULL_ADDRESS;
         owner = that.props.parcel.attributes.OWNER;
+        zoningDistrict = that.props.zoningDistrict;
+        zoningSubDistrict = that.props.zoningSubDistrict;
+        overlays = that.props.overlays;
         const template = {  // autocasts as new PopupTemplate()
           title: "Parcl ID: "+title,
           content: [
@@ -62,8 +70,16 @@ export default class BuildingScene extends React.Component {
               type:"text",
               text:"<table class='esri-widget__table'><tbody>\
                     <tr>\
-                    <th class='esri-feature__field-header'>PID</th>\
-                    <td class='esri-feature__field-data'>"+title+"</td>\
+                    <th class='esri-feature__field-header'>Zoning District</th>\
+                    <td class='esri-feature__field-data'>"+zoningDistrict+"</td>\
+                    </tr>\
+                    <tr>\
+                    <th class='esri-feature__field-header'>Zoning SubDistrict</th>\
+                    <td class='esri-feature__field-data'>"+zoningSubDistrict+"</td>\
+                    </tr>\
+                    <tr>\
+                    <th class='esri-feature__field-header'>Zoning Overlays</th>\
+                    <td class='esri-feature__field-data'>"+overlays+"</td>\
                     </tr>\
                     </tbody></table>"
             },

@@ -41,8 +41,8 @@ export default class GraphicsLayer extends React.Component {
         console.log(that.props.view.popup.visible)
         if(that.props.view.popup.visible == false){
           that.props.view.popup.open({
-            location:geometry.centroid,
-            title:"1",
+            location:that.props.mapPoint,
+            title:"Parcel ID: "+pid,
             content:pid
           })
 

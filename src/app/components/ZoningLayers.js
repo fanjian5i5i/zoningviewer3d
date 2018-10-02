@@ -5,7 +5,7 @@ export default class LayerList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            layers: null
+            layers: []
         };
     }
 
@@ -17,13 +17,18 @@ export default class LayerList extends React.Component {
         loadModules(["esri/layers/FeatureLayer",]).then(([ FeatureLayer]) => {
 
 
-            const layer = new FeatureLayer({
+            const zoningDistrict = new FeatureLayer({
               // URL to the service
               url: "http://mapservices.bostonredevelopmentauthority.org/arcproxy/arcgis/rest/services/Maps/Bos_Zoning_Viewer_WGS/MapServer/0"
             });
-            this.setState({ layers: layer});
+            const zoningSubDistrict = new FeatureLayer({
+              // URL to the service
+              url: "http://mapservices.bostonredevelopmentauthority.org/arcproxy/arcgis/rest/services/Maps/Bos_Zoning_Viewer_WGS/MapServer/1",
+              minScale:3000
+            });
+            this.setState({ layers: [zoningSubDistrict,zoningDistrict]});
 
-            this.props.map.add(layer);
+            this.props.map.addMany(this.state.layers);
           });
     }
 
