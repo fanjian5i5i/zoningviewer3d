@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { Scene } from 'react-arcgis';
 import BuildingScene from './BuildingScene';
-import BuildingUnderConstruction from './BuildingUnderConstruction';
-import BuildingPermitted from './BuildingPermitted';
-import BuildingByLU from './BuildingByLU';
+// import BuildingUnderConstruction from './BuildingUnderConstruction';
+// import BuildingPermitted from './BuildingPermitted';
+// import BuildingByLU from './BuildingByLU';
+import Art80 from './Art80';
 import SearchWidget from './SearchWidget';
 import LegendWidget from './LegendWidget';
 import BostonBasemap from './BostonBasemap';
@@ -13,6 +14,11 @@ import ZoningLayers from './ZoningLayers';
 import { loadModules } from 'react-arcgis';
 import { connect } from 'react-redux';
 import { showHideLegend } from '../redux/actions';
+
+
+import * as cms_docs from '../cms_docs';
+
+
 const styles = {
   legend:{
     display:"none"
@@ -26,7 +32,8 @@ class Map extends React.Component {
             view:null,
             graphicsLayer: null,
             parcel:null,
-            mapPoint:{}
+            mapPoint:{},
+            projects:cms_docs.getCmsDocs().cms_documents[0].BRA_Project
         };
 
         this.handleMapLoad = this.handleMapLoad.bind(this)
@@ -43,7 +50,7 @@ class Map extends React.Component {
               console.log(response.results);
               var graphic = response.results[0].graphic;
             });
-      loadModules(["esri/tasks/QueryTask", 
+      loadModules(["esri/tasks/QueryTask",
       "esri/tasks/support/Query",
       "esri/tasks/IdentifyTask",
       "esri/tasks/support/IdentifyParameters"]).then(([ QueryTask,Query,IdentifyTask, IdentifyParameters]) => {
@@ -63,7 +70,7 @@ class Map extends React.Component {
            that.setState({parcel:results.features[0],mapPoint: e.mapPoint});
 
          });
-         
+
          var zoningURL = "http://mapservices.bostonredevelopmentauthority.org/arcproxy/arcgis/rest/services/Maps/Bos_Zoning_Viewer_WGS/MapServer";
 
          var identifyTask = new IdentifyTask(zoningURL);
@@ -91,10 +98,10 @@ class Map extends React.Component {
                     that.setState({"zoningSubDistrict":result.feature.attributes.ZONE_});
                     break;
                   default:
-                    
+
                     overlays.push(result.layerName);
                 }
-              
+
               });
               that.setState({"overlays":overlays})
             })
@@ -111,14 +118,53 @@ class Map extends React.Component {
          //  queryTask.execute(query).then(function(results){
          //    // console.log(results)
          //    that.setState({zoningSubDistrict: results.features[0].attributes.DISTRICT});
-         // 
+         //
          //  });
-          
-          
+         // <BuildingByLU parcel={this.state.parcel}/>
+         // <BuildingPermitted parcel={this.state.parcel}/>
+         // <BuildingUnderConstruction parcel={this.state.parcel}/>
+// <BuildingScene parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays}/>
+// <GraphicsLayer parcel={this.state.parcel} mapPoint={this.state.mapPoint} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays}/>
+          // <Art80/>
       })
 
     }
-    componentWillMount() {
+    componentDidMount() {
+      var that=this;
+      loadModules(["esri/tasks/QueryTask",
+      "esri/tasks/support/Query","esri/geometry/Point"]).then(([ QueryTask,Query,Point]) => {
+        var SQLstr = [];
+        that.state.projects.forEach(function(project){
+            // console.log(project.BRAProjectStatus);
+            // if(project.BRAProjectStatus == "Permitted / Under Construction"){
+              var point = new Point({
+                  longitude: parseFloat(project.BRALongitude),
+                  latitude: parseFloat(project.BRALatitude)
+                })
+                var parcelURL = "https://services.arcgis.com/sFnw0xNflSi8J0uh/ArcGIS/rest/services/parcels_full_18/FeatureServer/0";
+                var queryTask = new QueryTask({
+                   url: parcelURL
+                 });
+                var query = new Query();
+                 query.returnGeometry = false;
+                 query.outFields = ["*"];
+                 query.geometry = point;
+                 query.spatialRelationship = "intersects";
+                 // When resolved, returns features and graphics that satisfy the query.
+                 queryTask.execute(query).then(function(results){
+                   SQLstr.push(results.features[0].attributes.PID_LONG);
+                   // consol.log(SQLstr);
+                 })
+            // }
+
+
+        });
+        setTimeout(function () {
+          // console.log(SQLstr)
+          that.setState({SQLstr:SQLstr})
+        }, 3000);
+      });
+
 
     }
     render() {
@@ -138,13 +184,13 @@ class Map extends React.Component {
               onClick = {this.handleOnClick.bind(this)}
               onLoad={this.handleMapLoad.bind(this)}
           >
-          <BuildingByLU parcel={this.state.parcel}/>
-          <BuildingPermitted parcel={this.state.parcel}/>
-          <BuildingUnderConstruction parcel={this.state.parcel}/>
-          <BuildingScene parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays}/>
+          <BuildingScene parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstr={this.state.SQLstr}/>
+
+
+
+
           <SearchWidget/>
           <BostonBasemap/>
-          <GraphicsLayer parcel={this.state.parcel} mapPoint={this.state.mapPoint} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays}/>
           <ZoningLayers/>
           {this.props.appBarState.showLegend ? <LegendWidget />:[]}
           {this.props.appBarState.showLayers ? <LayerControl/>:[]}
