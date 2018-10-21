@@ -52,9 +52,14 @@ class Map extends React.Component {
               var lat = response.results[0].graphic.attributes.Centr_Lat.toFixed(4);
               var lon = response.results[0].graphic.attributes.Centr_Lon.toFixed(4);
               // console.log(that.state.projects)
+              var template = {
+                title: "PID: "+response.results[0].graphic.attributes.Par_GIS_ID
+
+              };
+              that.setState({template:template})
               that.state.projects.forEach(function(project){
                 // console.log(parseFloat(project.BRALatitude).toFixed(4))
-                if(parseFloat(project.BRALatitude).toFixed(4) == lat){
+                if(parseFloat(project.BRALatitude).toFixed(4) == lat && parseFloat(project.BRALongitude).toFixed(4) == lon){
                   console.log(project);
 
                   // console.log(e.mapPoint)
@@ -83,6 +88,8 @@ class Map extends React.Component {
                   //     content:"123"
                   //   })
                   // }
+                }else{
+
                 }
               })
             });
