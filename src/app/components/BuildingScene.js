@@ -15,14 +15,17 @@ export default class BuildingScene extends React.Component {
         var that = this;
         var sqlStr = ""
         if(this.state.sceneLayer && this.props.SQLstr){
-          console.log(this.props.SQLstr.toString())
+          // console.log(this.props.SQLstr.toString())
           // this.props.SQLstr.forEach(function(str){
           //   sqlStr+="'"+str+"'";
           // })
           const sqlStr = that.props.SQLstr.map(str => "'" + str +"'");
-          console.log(sqlStr.toString())
-          this.state.sceneLayer.definitionExpression = "Par_GIS_ID IN ("+sqlStr+")"
+          // console.log(sqlStr.toString())
+          this.state.sceneLayer.definitionExpression = "Par_GIS_ID IN ("+sqlStr+")" + " AND Centr_Lat <> 0 AND Centr_Lon <> 0"
 
+        }
+        if(this.props.template && this.state.sceneLayer){
+          this.state.sceneLayer.popupTemplate = this.props.template
         }
 
 
@@ -57,6 +60,7 @@ export default class BuildingScene extends React.Component {
               },
               popupEnabled: true,
               legendEnabled:true,
+              // popupTemplate:this.state.template
               // definitionExpression: "Par_GIS_ID IN ('"+ that.props.SQLstr.toString()+"')"
               });
 
