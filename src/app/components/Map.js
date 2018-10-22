@@ -7,7 +7,8 @@ import BuildingUnderReview from './BuildingUnderReview';
 import BuildingLetterOfIntent from './BuildingLetterOfIntent';
 // import BuildingPermitted from './BuildingPermitted';
 // import BuildingByLU from './BuildingByLU';
-import Art80 from './Art80';
+import BuildingScene from './BuildingScene';
+// import Art80 from './Art80';
 import SearchWidget from './SearchWidget';
 import LegendWidget from './LegendWidget';
 import BostonBasemap from './BostonBasemap';
@@ -116,7 +117,7 @@ class Map extends React.Component {
         var SQLstrUnderReview = [];
         var SQLstrLOI= [];
         that.state.projects.forEach(function(project){
-            console.log(project.BRAProjectStatus);
+            // console.log(project.BRAProjectStatus);
             if(project.BRAProjectStatus=="Construction Complete"){
               var point = new Point({
                   longitude: parseFloat(project.BRALongitude),
@@ -255,11 +256,11 @@ class Map extends React.Component {
           <BuildingUnderReview parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrUnderReview={this.state.SQLstrUnderReview} template={this.state.template}/>
           <BuildingLetterOfIntent parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrLOI={this.state.SQLstrLOI} template={this.state.template}/>
 
-
+          <BuildingScene/>
 
           <SearchWidget/>
           <BostonBasemap/>
-          <Art80/>
+
           {this.props.appBarState.showLegend ? <LegendWidget />:[]}
           {this.props.appBarState.showLayers ? <LayerControl/>:[]}
 

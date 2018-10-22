@@ -12,21 +12,7 @@ export default class BuildingScene extends React.Component {
         return null;
     }
     componentDidUpdate(){
-        var that = this;
-        var sqlStr = ""
-        if(this.state.sceneLayer && this.props.SQLstr){
-          // console.log(this.props.SQLstr.toString())
-          // this.props.SQLstr.forEach(function(str){
-          //   sqlStr+="'"+str+"'";
-          // })
-          const sqlStr = that.props.SQLstr.map(str => "'" + str +"'");
-          // console.log(sqlStr.toString())
-          this.state.sceneLayer.definitionExpression = "Par_GIS_ID IN ("+sqlStr+")" + " AND Centr_Lat <> 0 AND Centr_Lon <> 0"
 
-        }
-        if(this.props.template && this.state.sceneLayer){
-          this.state.sceneLayer.popupTemplate = this.props.template
-        }
 
 
     }
@@ -41,13 +27,13 @@ export default class BuildingScene extends React.Component {
               type: "fill", // autocasts as new FillSymbol3DLayer()
               // If the value of material is not assigned, the default color will be grey
               material: {
-                color:"#ffffff",
+                color:[255, 255, 255, 0.7],
                 colorMixMode: "replace"
 
               },
               edges: {
                 type: 'solid',
-                color: [0, 0, 0, 1],
+                color: [0, 0, 0, 0.7],
                 size: 0.5
               }
             }]
@@ -60,6 +46,8 @@ export default class BuildingScene extends React.Component {
               },
               popupEnabled: true,
               legendEnabled:true,
+              visible:false,
+              title:"Current Building"
               // popupTemplate:this.state.template
               // definitionExpression: "Par_GIS_ID IN ('"+ that.props.SQLstr.toString()+"')"
               });

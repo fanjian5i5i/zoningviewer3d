@@ -41,13 +41,13 @@ export default class BuildingUnderConstruction extends React.Component {
               type: "fill", // autocasts as new FillSymbol3DLayer()
               // If the value of material is not assigned, the default color will be grey
               material: {
-                color:"#EE283B",
+                color:[238, 40, 59,0.7],
                 colorMixMode: "replace"
 
               },
               edges: {
                 type: 'solid',
-                color: [0, 0, 0, 1],
+                color: [0, 0, 0, 0.7],
                 size: 0.5
               }
             }]

@@ -3,7 +3,8 @@ import * as ActionTypes from './actionTypes';
 
 const initAppBarState = {
   // loginText: '',
-  showLegend: false,
+  showLegend: true,
+  showLayers:false
   // editor:false,
   // showConveyed: false,
   // lastFilter:{},

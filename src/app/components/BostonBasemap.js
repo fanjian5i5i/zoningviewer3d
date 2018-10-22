@@ -38,9 +38,9 @@ export default class BostonBasemap extends React.Component {
           var toggle = new BasemapToggle({
               // 2 - Set properties
               view: this.props.view, // view that provides access to the map's 'topo' basemap
-              nextBasemap: bostonBasemapDoIT // allows for toggling to the 'hybrid' basemap
+              nextBasemap: bostonBasemap  // allows for toggling to the 'hybrid' basemap
             });
-            this.setState({ "basemap":bostonBasemap });
+            this.setState({ "basemap":bostonBasemapDoIT});
 
             this.props.map.basemap  = this.state.basemap;
             this.props.view.ui.add(toggle, "top-left");

@@ -19,22 +19,22 @@ export default class LegendWidget extends React.Component {
               view: this.props.view,
               layerInfos: [{
                 layer: this.props.map.layers.getItemAt(0),
-                title: "Parcel Selected"
+                // title: "Parcel Selected"
               },{
                 layer: this.props.map.layers.getItemAt(1),
-                title: "Buildings By Landuse"
+                // title: "Buildings By Landuse"
               },
               {
                 layer: this.props.map.layers.getItemAt(2),
-                title: "Buildings Permitted"
+                // title: "Buildings Permitted"
               },
               {
                 layer: this.props.map.layers.getItemAt(3),
-                title: "Buildings Under Construction"
+                // title: "Buildings Under Construction"
               },
               {
                 layer: this.props.map.layers.getItemAt(4),
-                title: "Current Buildings"
+                // title: "Current Buildings"
               }
               ]
               });

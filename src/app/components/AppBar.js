@@ -47,8 +47,8 @@ const styles = theme =>({
 });
 class MapAppBar extends React.Component {
   state = {
-    showLegend:false,
-    legendVariant:"inherit",
+    showLegend:true,
+    legendVariant:"secondary",
     layerVariant:"inherit",
   };
   showHideLegend = event =>{
@@ -75,7 +75,7 @@ class MapAppBar extends React.Component {
                <MenuIcon />
              </IconButton>
              <Typography variant="title" color="inherit" className={classes.flex}>
-               Viewer
+               Article 80
              </Typography>
 
              <Tooltip title="Legend" placement="bottom-end">
