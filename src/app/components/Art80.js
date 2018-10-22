@@ -69,7 +69,7 @@ export default class GraphicsLayer extends React.Component {
                       longitude: parseFloat(project.BRALongitude),
                       latitude: parseFloat(project.BRALatitude)
                     };
-                    console.log(project)
+                    // console.log(project)
                     var template = {
                       title: project.Title,
                       content: [{

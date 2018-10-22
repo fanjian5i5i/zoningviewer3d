@@ -1,7 +1,10 @@
 import * as React from 'react';
 import { Scene } from 'react-arcgis';
-import BuildingScene from './BuildingScene';
-// import BuildingUnderConstruction from './BuildingUnderConstruction';
+import BuildingConstructionComplete from './BuildingConstructionComplete';
+import BuildingUnderConstruction from './BuildingUnderConstruction';
+import BuildingBoardApproved from './BuildingBoardApproved';
+import BuildingUnderReview from './BuildingUnderReview';
+import BuildingLetterOfIntent from './BuildingLetterOfIntent';
 // import BuildingPermitted from './BuildingPermitted';
 // import BuildingByLU from './BuildingByLU';
 import Art80 from './Art80';
@@ -49,17 +52,17 @@ class Map extends React.Component {
       that.state.view.hitTest(e)
             .then(function(response) {
               console.log(response.results);
-              var lat = response.results[0].graphic.attributes.Centr_Lat.toFixed(4);
-              var lon = response.results[0].graphic.attributes.Centr_Lon.toFixed(4);
+              var lat = response.results[0].graphic.attributes.Centr_Lat.toFixed(3);
+              var lon = response.results[0].graphic.attributes.Centr_Lon.toFixed(3);
               // console.log(that.state.projects)
               var template = {
-                title: "PID: "+response.results[0].graphic.attributes.Par_GIS_ID
-
+                title: "PID: "+response.results[0].graphic.attributes.Par_GIS_ID,
+                content:"Lat Lon are not matching"
               };
               that.setState({template:template})
               that.state.projects.forEach(function(project){
                 // console.log(parseFloat(project.BRALatitude).toFixed(4))
-                if(parseFloat(project.BRALatitude).toFixed(4) == lat && parseFloat(project.BRALongitude).toFixed(4) == lon){
+                if(parseFloat(project.BRALatitude).toFixed(3) == lat && parseFloat(project.BRALongitude).toFixed(3) == lon){
                   console.log(project);
 
                   // console.log(e.mapPoint)
@@ -75,7 +78,7 @@ class Map extends React.Component {
                        }]
                     },{
                       type: "text",
-                      text: project.BRAProjectDescription
+                      text: "<a href='http://www.bostonplans.org/mapRedirect?id=" + project.BRAProjectID + "&type=2'>"+project.BRAProjectDescription+"</a>"
                     }]
 
                   };
@@ -107,10 +110,14 @@ class Map extends React.Component {
       var that=this;
       loadModules(["esri/tasks/QueryTask",
       "esri/tasks/support/Query","esri/geometry/Point"]).then(([ QueryTask,Query,Point]) => {
-        var SQLstr = [];
+        var SQLstrConComp = [];
+        var SQLstrUndCon = [];
+        var SQLstrBoardApp = [];
+        var SQLstrUnderReview = [];
+        var SQLstrLOI= [];
         that.state.projects.forEach(function(project){
-            // console.log(project.BRAProjectStatus);
-            // if(project.BRAProjectStatus == "Permitted / Under Construction"){
+            console.log(project.BRAProjectStatus);
+            if(project.BRAProjectStatus=="Construction Complete"){
               var point = new Point({
                   longitude: parseFloat(project.BRALongitude),
                   latitude: parseFloat(project.BRALatitude)
@@ -126,16 +133,99 @@ class Map extends React.Component {
                  query.spatialRelationship = "intersects";
                  // When resolved, returns features and graphics that satisfy the query.
                  queryTask.execute(query).then(function(results){
-                   SQLstr.push(results.features[0].attributes.PID_LONG);
+
+                   SQLstrConComp.push(results.features[0].attributes.PID_LONG);
                    // consol.log(SQLstr);
                  })
-            // }
+            }else if(project.BRAProjectStatus=="Permitted / Under Construction"){
+              var point = new Point({
+                  longitude: parseFloat(project.BRALongitude),
+                  latitude: parseFloat(project.BRALatitude)
+                })
+                var parcelURL = "https://services.arcgis.com/sFnw0xNflSi8J0uh/ArcGIS/rest/services/parcels_full_18/FeatureServer/0";
+                var queryTask = new QueryTask({
+                   url: parcelURL
+                 });
+                var query = new Query();
+                 query.returnGeometry = false;
+                 query.outFields = ["*"];
+                 query.geometry = point;
+                 query.spatialRelationship = "intersects";
+                 // When resolved, returns features and graphics that satisfy the query.
+                 queryTask.execute(query).then(function(results){
+
+                   SQLstrUndCon.push(results.features[0].attributes.PID_LONG);
+                   // consol.log(SQLstr);
+                 })
+            }else if(project.BRAProjectStatus=="Board Approved"){
+              var point = new Point({
+                  longitude: parseFloat(project.BRALongitude),
+                  latitude: parseFloat(project.BRALatitude)
+                })
+                var parcelURL = "https://services.arcgis.com/sFnw0xNflSi8J0uh/ArcGIS/rest/services/parcels_full_18/FeatureServer/0";
+                var queryTask = new QueryTask({
+                   url: parcelURL
+                 });
+                var query = new Query();
+                 query.returnGeometry = false;
+                 query.outFields = ["*"];
+                 query.geometry = point;
+                 query.spatialRelationship = "intersects";
+                 // When resolved, returns features and graphics that satisfy the query.
+                 queryTask.execute(query).then(function(results){
+
+                   SQLstrBoardApp.push(results.features[0].attributes.PID_LONG);
+                   // consol.log(SQLstr);
+                 })
+            }else if(project.BRAProjectStatus=="Under Review"){
+              var point = new Point({
+                  longitude: parseFloat(project.BRALongitude),
+                  latitude: parseFloat(project.BRALatitude)
+                })
+                var parcelURL = "https://services.arcgis.com/sFnw0xNflSi8J0uh/ArcGIS/rest/services/parcels_full_18/FeatureServer/0";
+                var queryTask = new QueryTask({
+                   url: parcelURL
+                 });
+                var query = new Query();
+                 query.returnGeometry = false;
+                 query.outFields = ["*"];
+                 query.geometry = point;
+                 query.spatialRelationship = "intersects";
+                 // When resolved, returns features and graphics that satisfy the query.
+                 queryTask.execute(query).then(function(results){
+
+                   SQLstrUnderReview.push(results.features[0].attributes.PID_LONG);
+                   // consol.log(SQLstr);
+                 })
+            }
+            else if(project.BRAProjectStatus=="Letter of Intent"){
+              var point = new Point({
+                  longitude: parseFloat(project.BRALongitude),
+                  latitude: parseFloat(project.BRALatitude)
+                })
+                var parcelURL = "https://services.arcgis.com/sFnw0xNflSi8J0uh/ArcGIS/rest/services/parcels_full_18/FeatureServer/0";
+                var queryTask = new QueryTask({
+                   url: parcelURL
+                 });
+                var query = new Query();
+                 query.returnGeometry = false;
+                 query.outFields = ["*"];
+                 query.geometry = point;
+                 query.spatialRelationship = "intersects";
+                 // When resolved, returns features and graphics that satisfy the query.
+                 queryTask.execute(query).then(function(results){
+
+                   SQLstrLOI.push(results.features[0].attributes.PID_LONG);
+                   // consol.log(SQLstr);
+                 })
+            }
+
 
 
         });
         setTimeout(function () {
           // console.log(SQLstr)
-          that.setState({SQLstr:SQLstr})
+          that.setState({"SQLstrUndCon":SQLstrUndCon,"SQLstrConComp":SQLstrConComp,"SQLstrBoardApp":SQLstrBoardApp,"SQLstrUnderReview":SQLstrUnderReview,"SQLstrLOI":SQLstrLOI})
         }, 3000);
       });
 
@@ -158,14 +248,18 @@ class Map extends React.Component {
               onClick = {this.handleOnClick.bind(this)}
               onLoad={this.handleMapLoad.bind(this)}
           >
-          <BuildingScene parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstr={this.state.SQLstr} template={this.state.template}/>
+          <BuildingConstructionComplete parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrConComp={this.state.SQLstrConComp} template={this.state.template}/>
+          <BuildingUnderConstruction parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrUndCon={this.state.SQLstrUndCon} template={this.state.template}/>
 
+          <BuildingBoardApproved parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrBoardApp={this.state.SQLstrBoardApp} template={this.state.template}/>
+          <BuildingUnderReview parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrUnderReview={this.state.SQLstrUnderReview} template={this.state.template}/>
+          <BuildingLetterOfIntent parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrLOI={this.state.SQLstrLOI} template={this.state.template}/>
 
 
 
           <SearchWidget/>
           <BostonBasemap/>
-
+          <Art80/>
           {this.props.appBarState.showLegend ? <LegendWidget />:[]}
           {this.props.appBarState.showLayers ? <LayerControl/>:[]}
 
