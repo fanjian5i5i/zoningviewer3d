@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Scene } from 'react-arcgis';
 import BuildingConstructionComplete from './BuildingConstructionComplete';
-import BuildingUnderConstruction from './BuildingUnderConstruction';
+// import BuildingUnderConstruction from './BuildingUnderConstruction';
+import BuildingUnderConstruction from './BuildingUC';
 import BuildingBoardApproved from './BuildingBoardApproved';
 import BuildingUnderReview from './BuildingUnderReview';
 import BuildingLetterOfIntent from './BuildingLetterOfIntent';
@@ -15,6 +16,10 @@ import BostonBasemap from './BostonBasemap';
 import GraphicsLayer from './GraphicsLayer';
 import LayerControl from './LayerControl';
 import ZoningLayers from './ZoningLayers';
+
+import Open_in_new from '@material-ui/icons/OpenInNew';
+
+
 import { loadModules } from 'react-arcgis';
 import { connect } from 'react-redux';
 import { showHideLegend } from '../redux/actions';
@@ -79,7 +84,7 @@ class Map extends React.Component {
                        }]
                     },{
                       type: "text",
-                      text: "<a href='http://www.bostonplans.org/mapRedirect?id=" + project.BRAProjectID + "&type=2'>"+project.BRAProjectDescription+"</a>"
+                      text: "<div>"+project.BRAProjectDescription+"</div><a href='http://www.bostonplans.org/mapRedirect?id=" + project.BRAProjectID + "&type=2' target='_blank'><i class='material-icons'>open_in_new</i></a>"
                     }]
 
                   };
@@ -250,7 +255,7 @@ class Map extends React.Component {
               onLoad={this.handleMapLoad.bind(this)}
           >
           <BuildingConstructionComplete parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrConComp={this.state.SQLstrConComp} template={this.state.template}/>
-          <BuildingUnderConstruction parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrUndCon={this.state.SQLstrUndCon} template={this.state.template}/>
+          <BuildingUnderConstruction SQLstrUndCon={this.state.SQLstrUndCon} template={this.state.template}/>
 
           <BuildingBoardApproved parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrBoardApp={this.state.SQLstrBoardApp} template={this.state.template}/>
           <BuildingUnderReview parcel={this.state.parcel} zoningDistrict={this.state.zoningDistrict} zoningSubDistrict={this.state.zoningSubDistrict} overlays={this.state.overlays} SQLstrUnderReview={this.state.SQLstrUnderReview} template={this.state.template}/>
